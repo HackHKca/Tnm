@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตารางแข่ง 5v5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600&family=Noto+Sans+Thai:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0f1217;--card:#161a21;--in:#0f1217;--line:#262c36;--t:#e8eaee;--m:#8b93a1;--a:#ff5a36;--a-ink:#1a0a05;--rc:12px;--rk:8px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:400 16px/1.5 "Noto Sans Thai",system-ui,sans-serif;min-height:100vh;font-variant-numeric:tabular-nums}
+.w{max-width:800px;margin:0 auto;padding:24px 16px}
+h1,h3,.hd{font-family:Kanit,"Noto Sans Thai",system-ui,sans-serif;font-weight:600}
+h1{font-size:28px;line-height:1.2;margin:0 0 4px}
+.sub{color:var(--m);font-size:14px;margin-bottom:24px}
+nav{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-bottom:24px}
+nav a{padding:12px 0;color:var(--m);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;min-height:44px}
+nav a.on{color:var(--t);border-color:var(--a)}
+.tabs{display:inline-flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:var(--rk);padding:4px;margin-bottom:24px}
+.tabs button{border:0;background:none;color:var(--m);padding:8px 16px;border-radius:4px;font:inherit;font-weight:500;cursor:pointer;min-height:44px}
+.tabs button.on{background:var(--line);color:var(--t)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rc);padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:18px}
+.mem{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:var(--m);padding:8px 0;border-top:1px solid var(--line)}
+.mem b{color:var(--t);font-weight:500}
+.mem span:last-child{text-align:right}
+input{width:100%;background:var(--in);border:1px solid var(--line);color:var(--t);padding:12px;border-radius:var(--rk);font:inherit;min-height:44px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.fl{display:block;font-size:12px;color:var(--m);margin-bottom:4px}
+button{font:inherit;cursor:pointer;min-height:44px;border-radius:var(--rk);transition:background .15s ease,border-color .15s ease}
+button.b{background:var(--a);color:var(--a-ink);border:0;padding:0 24px;font-weight:600}
+button.g{background:none;border:1px solid var(--line);color:var(--t);padding:0 16px}
+button.d{color:var(--a);border-color:var(--a)}
+button.b:hover{background:#ff7452}button.g:hover{background:var(--line)}
+.empty{color:var(--m);padding:24px;border:1px dashed var(--line);border-radius:var(--rc);margin-bottom:12px;text-align:center}
+.msg{color:var(--a);font-size:14px;min-height:24px}
+.hide{display:none}
+.act{display:flex;gap:8px;margin-top:8px}
+.bk{display:flex;gap:24px;overflow-x:auto;padding-bottom:8px}
+.col{display:flex;flex-direction:column;justify-content:space-around;gap:12px;min-width:188px;flex:1}
+.ch{font-size:12px;color:var(--m);margin-bottom:-4px}
+.mt{background:var(--card);border:1px solid var(--line);border-radius:var(--rk);overflow:hidden}
+.tm{display:flex;gap:8px;align-items:center;padding:12px;font-size:14px;min-height:44px}
+.tm+.tm{border-top:1px solid var(--line)}
+.tm i{font-style:normal;color:var(--m);font-size:12px;width:16px}
+.tm.e{color:var(--m)}
+.fin{border-color:var(--a)}
+.fin .tm i{color:var(--a)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>ตารางแข่ง 5v5</h1>
+<div class="sub">สายการแข่งและรายชื่อทีม</div>
+<nav><a href="#" class="on">การแข่ง</a><a href="/" id="ap" style="margin-left:auto">ใบสมัคร ↗</a></nav>
+<div id="ban" class="card hide" style="border-color:var(--a)" role="alert">เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณารีเฟรชหน้า</div>
+<div class="card"><label class="fl" for="nt">เพิ่มชื่อทีม (สูงสุด 8 ทีม)</label><div class="act" style="margin-top:0"><input id="nt" maxlength="30" placeholder="ชื่อทีม" autocomplete="off"><button class="b" id="na">เพิ่ม</button></div><div class="msg" id="nm" role="alert"></div></div>
+<div class="tabs"><button id="t1" class="on">ตาราง</button><button id="t2">รายชื่อทีม</button></div>
+<div id="sched"></div>
+<div id="teams" class="hide"></div>
+</div>
+<script>
+var teams=[];
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function getSubs(t){if(t.subs)return t.subs.filter(function(x){return x[0]||x[1]});if(t.sub&&(t.sub[0]||t.sub[1]))return [t.sub];return []}
+var API="/api/teams";
+function req(method,body,id){
+  return fetch(API+(id?"?id="+encodeURIComponent(id):""),{method:method,headers:{"content-type":"application/json"},body:body?JSON.stringify(body):undefined})
+   .then(function(r){if(!r.ok)return r.json().catch(function(){return {}}).then(function(e){throw new Error(e.error||"error")});return r.json()})
+   .then(function(x){return load().then(function(){return x})});
+}
+var col={add:function(d){return req("POST",d)},doc:function(id){return {delete:function(){return req("DELETE",null,id)}}}};
+function load(){
+  return fetch(API).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(l){$("ban").classList.add("hide");teams=l;renderMatch()}).catch(function(){$("ban").classList.remove("hide")});
+}
+function initStore(){renderMatch();load();setInterval(load,5000)}
+
+function renderMatch(){
+  function tm(i,label){var t=i!=null?teams[i]:null;return '<div class="tm'+(t?'':' e')+'"><i>'+(i!=null?i+1:'')+'</i>'+(t?esc(t.name):label)+'</div>'}
+  function mt(a,b,la,lb,cls){return '<div class="mt'+(cls||'')+'">'+tm(a,la)+tm(b,lb)+'</div>'}
+  var q="",s2="";
+  for(var i=0;i<4;i++)q+=mt(i*2,i*2+1,"รอทีม","รอทีม");
+  for(var j=0;j<2;j++)s2+=mt(null,null,"ผู้ชนะ #"+(j*2+1),"ผู้ชนะ #"+(j*2+2));
+  $("sched").innerHTML='<div class="bk">'+
+   '<div class="col"><div class="ch">รอบ 8 ทีม</div>'+q+'</div>'+
+   '<div class="col"><div class="ch">รอบรองชนะเลิศ</div>'+s2+'</div>'+
+   '<div class="col"><div class="ch">ชิงชนะเลิศ</div>'+mt(null,null,"ผู้ชนะรองฯ #1","ผู้ชนะรองฯ #2"," fin")+'</div></div>';
+  var h="";
+  if(!teams.length)h='<div class="empty">ยังไม่มีทีมสมัคร</div>';
+  teams.forEach(function(t,i){
+    h+='<div class="card"><div class="act" style="justify-content:space-between;align-items:center;margin:0 0 8px"><h3 style="margin:0">'+(i+1)+". "+esc(t.name)+'</h3><button class="g d rm" data-i="'+i+'">ลบ</button></div>';
+    (t.members||[]).forEach(function(m){h+='<div class="mem"><b>'+esc(m[0])+"</b><span>"+esc(m[1])+"</span></div>"});
+    getSubs(t).forEach(function(x){h+='<div class="mem"><span>สำรอง · <b>'+esc(x[0])+'</b></span><span>'+esc(x[1])+'</span></div>'});
+    h+="</div>";
+  });
+  $("teams").innerHTML=h;
+  document.querySelectorAll(".rm").forEach(function(b){b.onclick=function(){
+    if(b.dataset.a!=="1"){b.dataset.a="1";b.textContent="กดอีกครั้ง";setTimeout(function(){b.dataset.a="";b.textContent="ลบ"},4000);return}
+    var t=teams[+b.dataset.i];
+    col.doc(t.id).delete().catch(function(){$("nm").textContent="ลบไม่สำเร็จ"});
+  }});
+}
+
+$("na").onclick=function(){
+  var n=$("nt").value.trim();$("nm").textContent="";
+  if(!n){$("nm").textContent="กรุณาใส่ชื่อทีม";$("nt").focus();return}
+  if(teams.length>=8){$("nm").textContent="ครบ 8 ทีมแล้ว";return}
+  col.add({name:n}).then(function(){$("nt").value=""}).catch(function(){$("nm").textContent="เพิ่มไม่สำเร็จ"});
+};
+$("nt").onkeydown=function(e){if(e.key==="Enter")$("na").click()};
+$("t1").onclick=function(){$("t1").classList.add("on");$("t2").classList.remove("on");$("sched").classList.remove("hide");$("teams").classList.add("hide")};
+$("t2").onclick=function(){$("t2").classList.add("on");$("t1").classList.remove("on");$("teams").classList.remove("hide");$("sched").classList.add("hide")};
+initStore();
+</script>
+</body>
+</html>
