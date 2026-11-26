@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ใบสมัคร 5v5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600&family=Noto+Sans+Thai:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0f1217;--card:#161a21;--in:#0f1217;--line:#262c36;--t:#e8eaee;--m:#8b93a1;--a:#ff5a36;--a-ink:#1a0a05;--rc:12px;--rk:8px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:400 16px/1.5 "Noto Sans Thai",system-ui,sans-serif;min-height:100vh;font-variant-numeric:tabular-nums}
+.w{max-width:800px;margin:0 auto;padding:24px 16px}
+h1,h3,.hd{font-family:Kanit,"Noto Sans Thai",system-ui,sans-serif;font-weight:600}
+h1{font-size:28px;line-height:1.2;margin:0 0 4px}
+.sub{color:var(--m);font-size:14px;margin-bottom:24px}
+nav{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-bottom:24px}
+nav a{padding:12px 0;color:var(--m);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;min-height:44px}
+nav a.on{color:var(--t);border-color:var(--a)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rc);padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:18px}
+.mem{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:var(--m);padding:8px 0;border-top:1px solid var(--line)}
+.mem b{color:var(--t);font-weight:500}
+.mem span:last-child{text-align:right}
+input{width:100%;background:var(--in);border:1px solid var(--line);color:var(--t);padding:12px;border-radius:var(--rk);font:inherit;min-height:44px}
+input.bad{border-color:var(--a)}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.lab{font-size:14px;font-weight:500;margin:16px 0 8px}
+.fl{display:block;font-size:12px;color:var(--m);margin-bottom:4px}
+button{font:inherit;cursor:pointer;min-height:44px;border-radius:var(--rk);transition:background .15s ease,border-color .15s ease}
+button.b{background:var(--a);color:var(--a-ink);border:0;padding:0 24px;font-weight:600}
+button.g{background:none;border:1px solid var(--line);color:var(--t);padding:0 16px}
+button.d{color:var(--a);border-color:var(--a)}
+button.b:hover{background:#ff7452}button.g:hover{background:var(--line)}
+.plus{width:100%;border:1px dashed var(--m);background:none;color:var(--t);padding:12px;font-weight:500}
+.plus:hover{border-color:var(--a)}
+.cnt{color:var(--m);font-size:14px;margin-bottom:16px}
+.empty{color:var(--m);padding:24px;border:1px dashed var(--line);border-radius:var(--rc);margin-bottom:12px;text-align:center}
+.msg{color:var(--a);font-size:14px;min-height:24px}
+.hide{display:none}
+.act{display:flex;gap:8px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>ใบสมัคร 5v5</h1>
+<div class="sub">สมัครทีมเข้าแข่ง สูงสุด 8 ทีม</div>
+<nav><a href="#" class="on">ใบสมัคร</a><a href="/match" id="mt" style="margin-left:auto">ตารางแข่ง ↗</a></nav>
+
+<div id="ban" class="card hide" style="border-color:var(--a)" role="alert">เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณารีเฟรชหน้า</div>
+<section id="apply">
+  <div class="cnt" id="cnt"></div>
+  <div id="list"></div>
+  <button class="plus" id="add">+ เพิ่มทีม</button>
+  <div class="card hide" id="form" style="margin-top:12px">
+    <h3 id="ft">ข้อมูลใบสมัคร</h3>
+    <label class="lab" for="tn" style="display:block">ชื่อทีม</label>
+    <input id="tn" aria-label="ชื่อทีม" placeholder="เช่น Shadow Team" maxlength="30" autocomplete="off">
+    <div class="lab">สมาชิก / ชื่อในเกม</div>
+    <div id="mems"></div>
+    <div class="lab">ตัวสำรอง (สูงสุด 2 คน)</div>
+    <div class="row"><div><label class="fl" for="sn0">สำรอง 1 · ชื่อ</label><input id="sn0" placeholder="ไม่บังคับ"></div><div><label class="fl" for="sg0">ชื่อในเกม</label><input id="sg0" placeholder="ไม่บังคับ"></div></div>
+    <div class="row"><div><label class="fl" for="sn1">สำรอง 2 · ชื่อ</label><input id="sn1" placeholder="ไม่บังคับ"></div><div><label class="fl" for="sg1">ชื่อในเกม</label><input id="sg1" placeholder="ไม่บังคับ"></div></div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="act"><button class="b" id="send">ส่ง</button><button class="g" id="cancel">ยกเลิก</button><button class="g d hide" id="del">ลบทีม</button></div>
+  </div>
+</section>
+</div>
+
+<script>
+var delArmed=false,MAX=8,teams=[],editId=null;
+var $=function(i){return document.getElementById(i)};
+function getSubs(t){if(t.subs)return t.subs.filter(function(x){return x[0]||x[1]});if(t.sub&&(t.sub[0]||t.sub[1]))return [t.sub];return []}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+
+var API="/api/teams";
+function req(method,body,id){
+  return fetch(API+(id?"?id="+encodeURIComponent(id):""),{method:method,headers:{"content-type":"application/json"},body:body?JSON.stringify(body):undefined})
+   .then(function(r){if(!r.ok)return r.json().catch(function(){return {}}).then(function(e){throw new Error(e.error||"error")});return r.json()})
+   .then(function(x){return load().then(function(){return x})});
+}
+var store={add:function(d){return req("POST",d)},doc:function(id){return {update:function(d){return req("PUT",d,id)},set:function(d){return req("PUT",d,id)},delete:function(){return req("DELETE",null,id)}}}};
+function load(){
+  return fetch(API).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(l){$("ban").classList.add("hide");teams=l;render()}).catch(function(){$("ban").classList.remove("hide")});
+}
+function initStore(){render();load();setInterval(load,5000)}
+
+function render(){
+  $("cnt").textContent="ทีมที่สมัครแล้ว "+teams.length+" / "+MAX;
+  $("add").classList.toggle("hide",teams.length>=MAX);
+  var l=$("list");l.innerHTML="";
+  if(!teams.length)l.innerHTML='<div class="empty">ยังไม่มีทีม กด + เพื่อสมัคร</div>';
+  teams.forEach(function(t){
+    var c=document.createElement("div");c.className="card";
+    var h="<h3>"+esc(t.name)+"</h3>";
+    (t.members||[]).forEach(function(m){h+='<div class="mem"><b>'+esc(m[0])+"</b><span>"+esc(m[1])+"</span></div>"});
+    getSubs(t).forEach(function(x){h+='<div class="mem"><span>สำรอง · <b>'+esc(x[0])+'</b></span><span>'+esc(x[1])+'</span></div>'});
+    h+='<div class="act"><button class="g">แก้ไข</button></div>';
+    c.innerHTML=h;
+    c.querySelector("button").onclick=function(){openForm(t)};
+    l.appendChild(c);
+  });
+}
+
+function openForm(t){
+  editId=t?t.id:null;
+  $("ft").textContent=t?"แก้ไขทีม":"ข้อมูลใบสมัคร";
+  $("tn").value=t?t.name:"";
+  var m=$("mems");m.innerHTML="";
+  for(var i=0;i<5;i++){
+    var v=t&&t.members&&t.members[i]?t.members[i]:["",""];
+    var r=document.createElement("div");r.className="row";
+    r.innerHTML='<div><label class="fl" for="mn'+i+'">สมาชิก '+(i+1)+' · ชื่อ</label><input id="mn'+i+'" class="mn" placeholder="เช่น เทพเงา"></div><div><label class="fl" for="mg'+i+'">ชื่อในเกม</label><input id="mg'+i+'" class="mg" placeholder="เช่น ราชาเทพเงา"></div>';
+    r.querySelector(".mn").value=v[0];r.querySelector(".mg").value=v[1];m.appendChild(r);
+  }
+  var sb=t?getSubs(t):[];for(var k=0;k<2;k++){$("sn"+k).value=sb[k]?sb[k][0]:"";$("sg"+k).value=sb[k]?sb[k][1]:""}
+  $("msg").textContent="";
+  $("del").classList.toggle("hide",!t);
+  $("form").classList.remove("hide");
+  $("form").scrollIntoView({behavior:"smooth"});
+}
+function closeForm(){$("form").classList.add("hide");editId=null}
+
+$("add").onclick=function(){if(teams.length>=MAX){return}openForm(null)};
+$("cancel").onclick=closeForm;
+$("send").onclick=function(){
+  var name=$("tn").value.trim();
+  document.querySelectorAll("input.bad").forEach(function(x){x.classList.remove("bad")});
+  if(!name){$("tn").classList.add("bad");$("tn").focus();$("msg").textContent="กรุณาใส่ชื่อทีม";return}
+  var ns=document.querySelectorAll(".mn"),gs=document.querySelectorAll(".mg"),mem=[];
+  for(var i=0;i<5;i++){
+    var a=ns[i].value.trim(),b=gs[i].value.trim();
+    if(!a||!b){(a?gs[i]:ns[i]).classList.add("bad");(a?gs[i]:ns[i]).focus();$("msg").textContent="กรอกสมาชิก "+(i+1)+" ให้ครบ ทั้งชื่อและชื่อในเกม";return}
+    mem.push([a,b]);
+  }
+  if(!editId&&teams.length>=MAX){$("msg").textContent="ครบ 8 ทีมแล้ว";return}
+  var data={name:name,members:mem,subs:[[$("sn0").value.trim(),$("sg0").value.trim()],[$("sn1").value.trim(),$("sg1").value.trim()]]};
+  var p;
+  if(editId)p=store.doc(editId).update(data);
+  else p=store.add(data);
+  p.then(closeForm).catch(function(e){$("msg").textContent=e.message==="full"?"ครบ 8 ทีมแล้ว":"บันทึกไม่สำเร็จ"});
+};
+$("del").onclick=function(){
+  if(!editId)return;
+  if(!delArmed){delArmed=true;$("del").textContent="กดอีกครั้งเพื่อยืนยันลบ";setTimeout(function(){delArmed=false;$("del").textContent="ลบทีม"},4000);return}
+  delArmed=false;$("del").textContent="ลบทีม";
+  store.doc(editId).delete().then(closeForm).catch(function(){$("msg").textContent="ลบไม่สำเร็จ ลองใหม่"});
+};
+initStore();
+</script>
+</body>
+</html>
